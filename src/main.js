@@ -15,12 +15,12 @@ const DIRECTIONS = {
 const CORNERS_POSITIONS = [DIRECTIONS.TL, DIRECTIONS.TR, DIRECTIONS.BL, DIRECTIONS.BR];
 
 /** START - Randomization functions */
-function generateRandomColor() {
-  return "#" + Math.floor(Math.random() * 16777215).toString(16);
-}
-
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+function generateRandomColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
 }
 
 function generateRandomCornerPosition() {
@@ -33,9 +33,9 @@ function generateRandomCornerPosition() {
 function generateCircle(ctx, radius, center, color = "#000000") {
   ctx.beginPath();
   ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
-  ctx.strokeStyle = color;
+  // ctx.strokeStyle = color;
   ctx.fillStyle = color;
-  ctx.stroke();
+  // ctx.stroke();
   ctx.fill();
 }
 
@@ -67,9 +67,9 @@ function generateArc(ctx, radius, center, position, color = '#000000') {
   ctx.moveTo(corners[1].x, corners[1].y);
   ctx.lineTo(corners[0].x, corners[0].y);
   ctx.lineTo(corners[2].x, corners[2].y);
-  ctx.strokeStyle = color;
+  // ctx.strokeStyle = color;
   ctx.fillStyle = color;
-  ctx.stroke();
+  // ctx.stroke();
   ctx.fill();
 }
 
@@ -78,9 +78,9 @@ function generateTriangle(ctx, corners, color = "#000000") {
   ctx.moveTo(corners[0].x, corners[0].y);
   ctx.lineTo(corners[1].x, corners[1].y);
   ctx.lineTo(corners[2].x, corners[2].y);
-  ctx.strokeStyle = color;
+  // ctx.strokeStyle = color;
   ctx.fillStyle = color;
-  ctx.stroke();
+  // ctx.stroke();
   ctx.fill();
 }
 
@@ -201,13 +201,15 @@ class Triangle {
 
 
 // Write shitty code below this line
-const SIDE = 40;
+const SIDE = 30;
 let startCorner = { x: 0, y: 0 };
 let corner = startCorner;
+const horizontalCount = Math.ceil(canvas.width / SIDE);
+const verticalCount = Math.ceil(canvas.height / SIDE);
 
 const SHAPES = [Circle, Arc, Triangle];
 const renderLoop = () => {
-  for (let i = 0; i < 11; i++) {
+  for (let i = 0; i < horizontalCount; i++) {
     const shapeRandomNumber = randomIntFromInterval(0, 2);
     const shape = SHAPES[shapeRandomNumber];
     let position = generateRandomCornerPosition();
@@ -217,28 +219,8 @@ const renderLoop = () => {
   }
 }
 
-renderLoop();
-startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
-corner = startCorner
-renderLoop();
-startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
-corner = startCorner
-renderLoop();
-startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
-corner = startCorner
-renderLoop();
-startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
-corner = startCorner
-renderLoop();
-startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
-corner = startCorner
-renderLoop();
-startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
-corner = startCorner
-renderLoop();
-startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
-corner = startCorner
-renderLoop();
-startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
-corner = startCorner
-renderLoop();
+for (let i = 0; i < verticalCount; i++) {
+  renderLoop();
+  startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
+  corner = startCorner
+}
