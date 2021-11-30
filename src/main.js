@@ -102,6 +102,7 @@ function generateTriangle(ctx, corners, color = "#000000") {
   ctx.moveTo(corners[0].x, corners[0].y);
   ctx.lineTo(corners[1].x, corners[1].y);
   ctx.lineTo(corners[2].x, corners[2].y);
+  ctx.lineTo(corners[0].x, corners[0].y);
   // ctx.strokeStyle = color;
   ctx.fillStyle = color;
   // ctx.stroke();
