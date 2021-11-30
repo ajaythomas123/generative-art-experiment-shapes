@@ -37,9 +37,14 @@ const CORNERS_POSITIONS = [DIRECTIONS.TL, DIRECTIONS.TR, DIRECTIONS.BL, DIRECTIO
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
+const colorPaletteIndex = randomIntFromInterval(0, COLOR_PALETTES.length - 1);
+const backgroundIndex = randomIntFromInterval(0, 3);
+ctx.fillStyle = COLOR_PALETTES[colorPaletteIndex][backgroundIndex];
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 function generateRandomColor() {
-  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+  const index = randomIntFromInterval(0, 2);
+  return COLOR_PALETTES[colorPaletteIndex].filter((c, i) => i !== backgroundIndex)[index];
 }
 
 function generateRandomCornerPosition() {
@@ -218,9 +223,7 @@ class Triangle {
 
 /** END - Shape classes */
 
-
-// Write shitty code below this line
-const SIDE = 15;
+const SIDE = 20;
 let startCorner = { x: 0, y: 0 };
 let corner = startCorner;
 const horizontalCount = Math.ceil(canvas.width / SIDE);
@@ -229,7 +232,7 @@ const verticalCount = Math.ceil(canvas.height / SIDE);
 const SHAPES = [Circle, Arc, Triangle];
 const renderLoop = () => {
   for (let i = 0; i < horizontalCount; i++) {
-    const shapeRandomNumber = randomIntFromInterval(0, 2);
+    const shapeRandomNumber = randomIntFromInterval(0, SHAPES.length - 1);
     const shape = SHAPES[shapeRandomNumber];
     let position = generateRandomCornerPosition();
     const instance = new shape(ctx, SIDE, corner);
