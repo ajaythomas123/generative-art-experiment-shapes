@@ -57,10 +57,8 @@ function generateRandomCornerPosition() {
 function generateCircle(ctx, radius, center, color = "#000000") {
   ctx.beginPath();
   ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
-  // ctx.strokeStyle = color;
+  ctx.strokeStyle = color;
   ctx.fillStyle = color;
-  // ctx.stroke();
-  ctx.fill();
 }
 
 function generateArc(ctx, radius, center, position, color = '#000000') {
@@ -91,10 +89,8 @@ function generateArc(ctx, radius, center, position, color = '#000000') {
   ctx.moveTo(corners[1].x, corners[1].y);
   ctx.lineTo(corners[0].x, corners[0].y);
   ctx.lineTo(corners[2].x, corners[2].y);
-  // ctx.strokeStyle = color;
+  ctx.strokeStyle = color;
   ctx.fillStyle = color;
-  // ctx.stroke();
-  ctx.fill();
 }
 
 function generateTriangle(ctx, corners, color = "#000000") {
@@ -103,10 +99,8 @@ function generateTriangle(ctx, corners, color = "#000000") {
   ctx.lineTo(corners[1].x, corners[1].y);
   ctx.lineTo(corners[2].x, corners[2].y);
   ctx.lineTo(corners[0].x, corners[0].y);
-  // ctx.strokeStyle = color;
+  ctx.strokeStyle = color;
   ctx.fillStyle = color;
-  // ctx.stroke();
-  ctx.fill();
 }
 
 /** END - Drawing functions */
@@ -189,9 +183,18 @@ class Circle {
     this.corner = corner;
   }
 
+  _stroke = () => {
+    this.ctx.stroke();
+  }
+
+  _fill = () => {
+    this.ctx.fill();
+  }
+
   render = (draw) => {
     const center = getSquareCenter(2 * this.radius, this.corner);
     generateCircle(this.ctx, this.radius, center, generateRandomColor());
+    this._fill();
   };
 }
 
@@ -202,9 +205,18 @@ class Arc {
     this.corner = corner;
   }
 
+  _stroke = () => {
+    this.ctx.stroke();
+  }
+
+  _fill = () => {
+    this.ctx.fill();
+  }
+
   render(position) {
     const color = generateRandomColor();
     generateArc(this.ctx, this.radius, this.corner, position, color);
+    this._fill()
   }
 }
 
@@ -215,10 +227,19 @@ class Triangle {
     this.corner = corner;
   }
 
+  _stroke = () => {
+    this.ctx.stroke();
+  }
+
+  _fill = () => {
+    this.ctx.fill();
+  }
+
   render(position) {
     const corners = generateTriangleCorners(this.side, this.corner, position);
     const color = generateRandomColor();
     generateTriangle(this.ctx, corners, color);
+    this._fill();
   }
 }
 
