@@ -38,10 +38,13 @@ const CORNERS_POSITIONS = [
 ];
 
 /** START - Randomization functions */
-function randomIntFromInterval(min, max) {
-  // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
+function getRandomIntGenerator(prng) {
+  return function(min, max) {
+    return Math.floor(prng() * (max - min + 1) + min);
+  }
 }
+
+var randomIntFromInterval;
 
 function generateRandomColor(backgroundColorIndex, colorPaletteIndex) {
   const index = randomIntFromInterval(0, 2);
@@ -294,8 +297,11 @@ const horizontalCount = Math.ceil(canvas.width / SIDE);
 const verticalCount = Math.ceil(canvas.height / SIDE);
 
 function generate() {
+  const seed = crypto.getRandomValues(new Uint32Array(1))[0];
+  const randGenerator = mulberry32(seed);
   let startCorner = { x: 0, y: 0 };
   let corner = startCorner;
+  randomIntFromInterval = getRandomIntGenerator(randGenerator);
   const colorPaletteIndex = randomIntFromInterval(0, COLOR_PALETTES.length - 1);
   const backgroundColorIndex = randomIntFromInterval(0, 3);
   ctx.fillStyle = COLOR_PALETTES[colorPaletteIndex][backgroundColorIndex];
