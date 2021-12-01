@@ -7,18 +7,15 @@ function setupCanvas(canvas) {
   // size * the device pixel ratio.
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
-  var ctx = canvas.getContext('2d');
+  var ctx = canvas.getContext("2d");
   // Scale all drawing operations by the dpr, so you
   // don't have to worry about the difference.
   ctx.scale(dpr, dpr);
   return ctx;
 }
-const boundingClientRect = document.body.getBoundingClientRect();
+
 const canvas = document.getElementById("canvas");
-canvas.width = boundingClientRect.width;
-canvas.height = boundingClientRect.height;
-setupCanvas(canvas);
-const ctx = canvas.getContext("2d");
+const ctx = setupCanvas(canvas);
 
 const DIRECTIONS = {
   T: "top",
@@ -31,24 +28,31 @@ const DIRECTIONS = {
   BR: "bottomRight",
 };
 
-const CORNERS_POSITIONS = [DIRECTIONS.TL, DIRECTIONS.TR, DIRECTIONS.BL, DIRECTIONS.BR];
+const GUTTER = 1;
+
+const CORNERS_POSITIONS = [
+  DIRECTIONS.TL,
+  DIRECTIONS.TR,
+  DIRECTIONS.BL,
+  DIRECTIONS.BR,
+];
 
 /** START - Randomization functions */
-function randomIntFromInterval(min, max) { // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min)
+function randomIntFromInterval(min, max) {
+  // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
-const colorPaletteIndex = randomIntFromInterval(0, COLOR_PALETTES.length - 1);
-const backgroundIndex = randomIntFromInterval(0, 3);
-ctx.fillStyle = COLOR_PALETTES[colorPaletteIndex][backgroundIndex];
-ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-function generateRandomColor() {
+function generateRandomColor(backgroundColorIndex, colorPaletteIndex) {
   const index = randomIntFromInterval(0, 2);
-  return COLOR_PALETTES[colorPaletteIndex].filter((c, i) => i !== backgroundIndex)[index];
+  return COLOR_PALETTES[colorPaletteIndex].filter(
+    (c, i) => i !== backgroundColorIndex
+  )[index];
 }
 
 function generateRandomCornerPosition() {
-  return CORNERS_POSITIONS[randomIntFromInterval(0, 3)];
+  const index = randomIntFromInterval(0, 3);
+  return CORNERS_POSITIONS[index];
 }
 
 /** END - Randomization functions */
@@ -61,7 +65,7 @@ function generateCircle(ctx, radius, center, color = "#000000") {
   ctx.fillStyle = color;
 }
 
-function generateArc(ctx, radius, center, position, color = '#000000') {
+function generateArc(ctx, radius, center, position, color = "#000000") {
   ctx.beginPath();
   let startAngle;
   let endAngle;
@@ -116,14 +120,30 @@ function generateTriangleCorners(side, tlCorner, rightAngleCornerPosition) {
    */
   switch (rightAngleCornerPosition) {
     case DIRECTIONS.TR:
-      return [{ x: x + side, y }, { x: x + side, y: y + side }, { x, y }];
+      return [
+        { x: x + side, y },
+        { x: x + side, y: y + side },
+        { x, y },
+      ];
     case DIRECTIONS.BL:
-      return [{ x, y: y + side }, { x: x, y: y }, { x: x + side, y: y + side }];
+      return [
+        { x, y: y + side },
+        { x: x, y: y },
+        { x: x + side, y: y + side },
+      ];
     case DIRECTIONS.BR:
-      return [{ x: x + side, y: y + side }, { x: x + side, y }, { x, y: y + side }];
+      return [
+        { x: x + side, y: y + side },
+        { x: x + side, y },
+        { x, y: y + side },
+      ];
     case DIRECTIONS.TL:
     default:
-      return [{ x, y }, { x, y: y + side }, { x: x + side, y }];
+      return [
+        { x, y },
+        { x, y: y + side },
+        { x: x + side, y },
+      ];
   }
 }
 
@@ -132,32 +152,32 @@ function getAdjacentCoordinate(distance, coordinates, direction) {
   let { x, y } = coordinates;
   switch (direction) {
     case T:
-      y -= distance + 1;
+      y -= distance + GUTTER;
       break;
     case R:
-      x += distance + 1;
+      x += distance + GUTTER;
       break;
     case B:
-      y += distance + 1;
+      y += distance + GUTTER;
       break;
     case L:
-      x -= distance + 1;
+      x -= distance + GUTTER;
       break;
     case TL:
-      x -= distance + 1;
-      y -= distance + 1;
+      x -= distance + GUTTER;
+      y -= distance + GUTTER;
       break;
     case TR:
-      x += distance + 1;
-      y -= distance + 1;
+      x += distance + GUTTER;
+      y -= distance + GUTTER;
       break;
     case BL:
-      x -= distance + 1;
-      y += distance + 1;
+      x -= distance + GUTTER;
+      y += distance + GUTTER;
       break;
     case BR:
-      x += distance + 1;
-      y += distance + 1;
+      x += distance + GUTTER;
+      y += distance + GUTTER;
       break;
     default:
       break;
@@ -177,94 +197,134 @@ function getSquareCenter(side, tlCorner) {
 /** START - Shape classes */
 
 class Circle {
-  constructor(ctx, diameter, corner) {
+  constructor(ctx, backgroundColorIndex, colorPaletteIndex, diameter, corner) {
     this.ctx = ctx;
+    this.colorPaletteIndex = colorPaletteIndex;
+    this.backgroundColorIndex = backgroundColorIndex;
     this.radius = diameter / 2;
     this.corner = corner;
   }
 
   _stroke = () => {
     this.ctx.stroke();
-  }
+  };
 
   _fill = () => {
     this.ctx.fill();
-  }
+  };
 
   render = (draw) => {
     const center = getSquareCenter(2 * this.radius, this.corner);
-    generateCircle(this.ctx, this.radius, center, generateRandomColor());
+    generateCircle(
+      this.ctx,
+      this.radius,
+      center,
+      generateRandomColor(this.backgroundColorIndex, this.colorPaletteIndex)
+    );
     this._fill();
   };
 }
 
 class Arc {
-  constructor(ctx, side, corner) {
+  constructor(ctx, backgroundColorIndex, colorPaletteIndex, side, corner) {
     this.ctx = ctx;
+    this.colorPaletteIndex = colorPaletteIndex;
+    this.backgroundColorIndex = backgroundColorIndex;
     this.radius = side;
     this.corner = corner;
   }
 
   _stroke = () => {
     this.ctx.stroke();
-  }
+  };
 
   _fill = () => {
     this.ctx.fill();
-  }
+  };
 
   render(position) {
-    const color = generateRandomColor();
+    const color = generateRandomColor(
+      this.backgroundColorIndex,
+      this.colorPaletteIndex
+    );
     generateArc(this.ctx, this.radius, this.corner, position, color);
-    this._fill()
+    this._fill();
   }
 }
 
 class Triangle {
-  constructor(ctx, side, corner) {
+  constructor(ctx, backgroundColorIndex, colorPaletteIndex, side, corner) {
     this.ctx = ctx;
+    this.colorPaletteIndex = colorPaletteIndex;
+    this.backgroundColorIndex = backgroundColorIndex;
     this.side = side;
     this.corner = corner;
   }
 
   _stroke = () => {
     this.ctx.stroke();
-  }
+  };
 
   _fill = () => {
     this.ctx.fill();
-  }
+  };
 
   render(position) {
     const corners = generateTriangleCorners(this.side, this.corner, position);
-    const color = generateRandomColor();
+    const color = generateRandomColor(
+      this.backgroundColorIndex,
+      this.colorPaletteIndex
+    );
     generateTriangle(this.ctx, corners, color);
     this._fill();
   }
 }
 
+const SHAPES = [Circle, Arc, Triangle];
+
+const getRandomShape = () => {
+  return SHAPES[randomIntFromInterval(0, SHAPES.length - 1)];
+};
+
 /** END - Shape classes */
 
 const SIDE = 20;
-let startCorner = { x: 0, y: 0 };
-let corner = startCorner;
+
 const horizontalCount = Math.ceil(canvas.width / SIDE);
 const verticalCount = Math.ceil(canvas.height / SIDE);
 
-const SHAPES = [Circle, Arc, Triangle];
-const renderLoop = () => {
-  for (let i = 0; i < horizontalCount; i++) {
-    const shapeRandomNumber = randomIntFromInterval(0, SHAPES.length - 1);
-    const shape = SHAPES[shapeRandomNumber];
-    let position = generateRandomCornerPosition();
-    const instance = new shape(ctx, SIDE, corner);
-    instance.render(position);
-    corner = getAdjacentCoordinate(SIDE, corner, DIRECTIONS.R);
-  }
+function generate() {
+  let startCorner = { x: 0, y: 0 };
+  let corner = startCorner;
+  const colorPaletteIndex = randomIntFromInterval(0, COLOR_PALETTES.length - 1);
+  const backgroundColorIndex = randomIntFromInterval(0, 3);
+  ctx.fillStyle = COLOR_PALETTES[colorPaletteIndex][backgroundColorIndex];
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const renderRow = () => {
+    for (let i = 0; i < horizontalCount; i++) {
+      const shape = getRandomShape();
+      let position = generateRandomCornerPosition();
+      const instance = new shape(
+        ctx,
+        backgroundColorIndex,
+        colorPaletteIndex,
+        SIDE,
+        corner
+      );
+      instance.render(position);
+      corner = getAdjacentCoordinate(SIDE, corner, DIRECTIONS.R);
+    }
+  };
+
+  const renderRows = () => {
+    for (let i = 0; i < verticalCount; i++) {
+      renderRow();
+      startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B);
+      corner = startCorner;
+    }
+  };
+  renderRows();
 }
 
-for (let i = 0; i < verticalCount; i++) {
-  renderLoop();
-  startCorner = getAdjacentCoordinate(SIDE, startCorner, DIRECTIONS.B)
-  corner = startCorner
-}
+generate();
+canvas.addEventListener("click", generate);
