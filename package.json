@@ -1,7 +1,7 @@
 {
   "name": "generative-art-experiment-shapes",
   "version": "1.0.0",
-  "description": "",
+  "description": "Generate random patterns using HTML canvas.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
