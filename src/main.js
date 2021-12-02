@@ -2,6 +2,7 @@ import './styles.css';
 import mulberry32 from './mulberry32';
 import COLOR_PALETTES from './colors';
 
+// TODO: Code cleanup
 function setupCanvas(canvas) {
   // Get the device pixel ratio, falling back to 1.
   var dpr = window.devicePixelRatio || 1;
@@ -19,7 +20,7 @@ function setupCanvas(canvas) {
 }
 
 const canvas = document.getElementById("canvas");
-const ctx = setupCanvas(canvas);
+let ctx = setupCanvas(canvas);
 
 const DIRECTIONS = {
   T: "top",
@@ -297,10 +298,11 @@ const getRandomShape = () => {
 
 const SIDE = 20;
 
-const horizontalCount = Math.ceil(canvas.width / SIDE);
-const verticalCount = Math.ceil(canvas.height / SIDE);
+
 
 function generate() {
+  const horizontalCount = Math.ceil(canvas.width / SIDE);
+  const verticalCount = Math.ceil(canvas.height / SIDE);
   const seed = crypto.getRandomValues(new Uint32Array(1))[0];
   console.log(seed);
   const randGenerator = mulberry32(seed);
@@ -345,4 +347,9 @@ document.addEventListener('keypress', e => {
       generate();
     });
   }
-})
+});
+
+window.addEventListener('resize', e => {
+  ctx = setupCanvas(canvas);
+  generate();
+});
