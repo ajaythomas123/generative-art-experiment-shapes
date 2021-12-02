@@ -1,3 +1,7 @@
+import './styles.css';
+import mulberry32 from './mulberry32';
+import COLOR_PALETTES from './colors';
+
 function setupCanvas(canvas) {
   // Get the device pixel ratio, falling back to 1.
   var dpr = window.devicePixelRatio || 1;
@@ -298,6 +302,7 @@ const verticalCount = Math.ceil(canvas.height / SIDE);
 
 function generate() {
   const seed = crypto.getRandomValues(new Uint32Array(1))[0];
+  console.log(seed);
   const randGenerator = mulberry32(seed);
   let startCorner = { x: 0, y: 0 };
   let corner = startCorner;
@@ -334,3 +339,10 @@ function generate() {
 
 generate();
 canvas.addEventListener("click", generate);
+document.addEventListener('keypress', e => {
+  if (e.code === 'Space') {
+    requestAnimationFrame(() => {
+      generate();
+    });
+  }
+})

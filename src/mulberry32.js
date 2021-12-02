@@ -1,4 +1,4 @@
-function mulberry32(a) {
+export default function mulberry32(a) {
   return function() {
     a |= 0; a = a + 0x6D2B79F5 | 0;
     var t = Math.imul(a ^ a >>> 15, 1 | a);

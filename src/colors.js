@@ -510,3 +510,5 @@ const COLOR_PALETTES = [
   ["#8A79AF", "#D38CAD", "#FFD2A5", "#FFFFC1"],
   ["#1B1A17", "#A35709", "#FF8303", "#F0E3CA"],
 ];
+
+export default COLOR_PALETTES;
