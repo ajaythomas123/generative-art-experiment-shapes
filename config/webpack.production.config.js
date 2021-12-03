@@ -3,6 +3,7 @@ const { merge } = require('webpack-merge');
 const CommonConfig = require('./webpack.common.config.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HTMLInlineCSSWebpackPlugin = require("html-inline-css-webpack-plugin").default;
+const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 module.exports = merge(CommonConfig, {
@@ -23,6 +24,7 @@ module.exports = merge(CommonConfig, {
   plugins: [
     new MiniCssExtractPlugin({ filename: 'styles-[contenthash].css' }),
     new HTMLInlineCSSWebpackPlugin(),
+    new HtmlInlineScriptPlugin(),
   ],
   mode: 'production',
   optimization: {
