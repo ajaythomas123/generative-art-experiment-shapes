@@ -1,6 +1,12 @@
 :root {
   font-size: 1em;
+  box-sizing: border-box;
 }
+
+*, ::before, ::after {
+  box-sizing: inherit;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -58,4 +64,22 @@ h1.move {
   100% {
     transform: translateY(0.25em);
   }
+}
+
+#github {
+  box-shadow: #000000 4px 4px 20px 0px;
+  justify-content: center;
+  position: absolute;
+  top: 0.5em;
+  display: flex;
+  right: 0.5em;
+  background-color: #fff;
+  border-radius: 200px;
+  height: 3em;
+  width: 3em;
+}
+
+#github > a {
+  height: 2.25em;
+  padding-top: 0.375em;
 }
