@@ -56,14 +56,17 @@ function generateArc(ctx, radius, center, position, color = '#000000') {
   let startAngle;
   let endAngle;
   let corners = generateTriangleCorners(radius, center, position);
+  let counterClockwise = false;
   switch (position) {
     case DIRECTIONS.TR:
-      startAngle = 0.5 * Math.PI;
-      endAngle = Math.PI;
+      counterClockwise = true;
+      startAngle = Math.PI;
+      endAngle = 0.5 * Math.PI;
       break;
     case DIRECTIONS.BL:
-      startAngle = 1.5 * Math.PI;
-      endAngle = 2 * Math.PI;
+      counterClockwise = true;
+      startAngle = 2 * Math.PI;
+      endAngle = 1.5 * Math.PI;
       break;
     case DIRECTIONS.BR:
       startAngle = Math.PI;
@@ -74,8 +77,8 @@ function generateArc(ctx, radius, center, position, color = '#000000') {
       startAngle = 0;
       endAngle = 0.5 * Math.PI;
       break;
-  }
-  ctx.arc(corners[0].x, corners[0].y, radius, startAngle, endAngle);
+    }
+  ctx.arc(corners[0].x, corners[0].y, radius, startAngle, endAngle, counterClockwise);
   ctx.moveTo(corners[1].x, corners[1].y);
   ctx.lineTo(corners[0].x, corners[0].y);
   ctx.lineTo(corners[2].x, corners[2].y);
