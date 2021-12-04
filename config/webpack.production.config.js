@@ -1,12 +1,12 @@
 const path = require('path');
-const { merge } = require('webpack-merge');
+const {merge} = require('webpack-merge');
 const CommonConfig = require('./webpack.common.config.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HTMLInlineCSSWebpackPlugin = require("html-inline-css-webpack-plugin").default;
+const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
 const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const zlib = require('zlib');
 
 module.exports = merge(CommonConfig, {
@@ -26,15 +26,15 @@ module.exports = merge(CommonConfig, {
   },
   plugins: [
     new CompressionPlugin({
-      filename: "[path][base].gz",
-      algorithm: "gzip",
+      filename: '[path][base].gz',
+      algorithm: 'gzip',
       test: /\.js$|\.css$|\.html$/,
       threshold: 10240,
       minRatio: 0.8,
     }),
     new CompressionPlugin({
-      filename: "[path][base].br",
-      algorithm: "brotliCompress",
+      filename: '[path][base].br',
+      algorithm: 'brotliCompress',
       test: /\.(js|css|html|svg)$/,
       compressionOptions: {
         params: {
@@ -45,17 +45,13 @@ module.exports = merge(CommonConfig, {
       minRatio: 0.8,
       deleteOriginalAssets: false,
     }),
-    new MiniCssExtractPlugin({ filename: 'styles-[contenthash].css' }),
+    new MiniCssExtractPlugin({filename: 'styles-[contenthash].css'}),
     new HTMLInlineCSSWebpackPlugin(),
     new HtmlInlineScriptPlugin(),
   ],
   mode: 'production',
   optimization: {
     minimize: true,
-    minimizer: [
-      new TerserPlugin(),
-      new CssMinimizerPlugin(),
-    ]
-  }
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
+  },
 });
-

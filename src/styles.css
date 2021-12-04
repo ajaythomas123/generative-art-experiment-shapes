@@ -18,7 +18,7 @@ canvas {
   bottom: 0;
   height: 7em;
   width: 100vw;
-  background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,7 +29,6 @@ canvas {
 #overlay.hide {
   opacity: 0;
 }
-
 
 h1 {
   margin: 0;
@@ -45,10 +44,18 @@ h1.move {
 }
 
 @-webkit-keyframes mover {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(0.25em); }
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0.25em);
+  }
 }
 @keyframes mover {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(0.25em); }
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0.25em);
+  }
 }

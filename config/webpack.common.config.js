@@ -7,24 +7,20 @@ module.exports = {
       {
         test: /.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
       },
       {
         test: /.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader'
-        ]
-      }
-    ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+    ],
   },
   plugins: [
     new HtmlPlugin({
       template: './index.html',
-      inject: 'body'
-    })
+      inject: 'body',
+    }),
   ],
   entry: './src/main.js',
-  mode: 'none'
+  mode: 'none',
 };
-

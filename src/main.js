@@ -1,14 +1,9 @@
-import "./styles.css";
-import COLOR_PALETTES from "./colors";
-import { DIRECTIONS } from "./constants";
-import { getRandomIterator } from './random';
-import { Arc, Circle, Triangle } from "./shapes";
-const CORNERS_POSITIONS = [
-  DIRECTIONS.TL,
-  DIRECTIONS.TR,
-  DIRECTIONS.BL,
-  DIRECTIONS.BR,
-];
+import './styles.css';
+import COLOR_PALETTES from './colors';
+import {DIRECTIONS} from './constants';
+import {getRandomIterator} from './random';
+import {Arc, Circle, Triangle} from './shapes';
+const CORNERS_POSITIONS = [DIRECTIONS.TL, DIRECTIONS.TR, DIRECTIONS.BL, DIRECTIONS.BR];
 
 const SHAPES = [Arc, Circle, Triangle];
 const overlay = document.getElementById('overlay');
@@ -21,14 +16,14 @@ function setupCanvas(canvas) {
   // size * the device pixel ratio.
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
-  var ctx = canvas.getContext("2d");
+  var ctx = canvas.getContext('2d');
   // Scale all drawing operations by the dpr, so you
   // don't have to worry about the difference.
   ctx.scale(dpr, dpr);
   return ctx;
 }
 
-const canvas = document.getElementById("canvas");
+const canvas = document.getElementById('canvas');
 let ctx = setupCanvas(canvas);
 
 function getSeeds() {
@@ -37,15 +32,15 @@ function getSeeds() {
     colorPalette: Math.random() * 2 ** 32,
     backgroundColor: Math.random() * 2 ** 32,
     shapeColor: Math.random() * 2 ** 32,
-    position: Math.random() * 2 ** 32
+    position: Math.random() * 2 ** 32,
   };
-};
+}
 
 let SEEDS = getSeeds();
 
 function getAdjacentCoordinate(distance, gutter, coordinates, direction) {
-  const { T, R, B, L, TL, TR, BL, BR } = DIRECTIONS;
-  let { x, y } = coordinates;
+  const {T, R, B, L, TL, TR, BL, BR} = DIRECTIONS;
+  let {x, y} = coordinates;
   switch (direction) {
     case T:
       y -= distance + gutter;
@@ -78,10 +73,8 @@ function getAdjacentCoordinate(distance, gutter, coordinates, direction) {
     default:
       break;
   }
-  return { x, y };
+  return {x, y};
 }
-
-
 
 /** END - Computation functions */
 
@@ -100,10 +93,10 @@ function generate(seeds) {
   const shapeColors = colorPalette.filter(color => color !== backgroundColor);
   const iterators = {
     color: getRandomIterator(shapeColors, seeds.shapeColor),
-    position: getRandomIterator(CORNERS_POSITIONS, seeds.position)
+    position: getRandomIterator(CORNERS_POSITIONS, seeds.position),
   };
 
-  let startCorner = { x: 0, y: 0 };
+  let startCorner = {x: 0, y: 0};
   let corner = startCorner;
 
   ctx.fillStyle = backgroundColor;
@@ -111,12 +104,7 @@ function generate(seeds) {
   const renderRow = () => {
     for (let i = 0; i < horizontalCount; i++) {
       const shape = shapeIterator.next();
-      const instance = new shape(
-        ctx,
-        iterators,
-        SIDE,
-        corner
-      );
+      const instance = new shape(ctx, iterators, SIDE, corner);
       instance.render();
       corner = getAdjacentCoordinate(SIDE, GUTTER, corner, DIRECTIONS.R);
     }
@@ -145,7 +133,7 @@ function clickListener() {
 }
 
 function keyListener(e) {
-  if (e.code === "Space") {
+  if (e.code === 'Space') {
     hideOverlay();
     SEEDS = getSeeds();
     requestAnimationFrame(() => {
@@ -164,4 +152,4 @@ generate(SEEDS);
 canvas.addEventListener('click', clickListener);
 overlay.addEventListener('click', clickListener);
 document.addEventListener('keypress', keyListener);
-window.addEventListener("resize", resizeListener);
+window.addEventListener('resize', resizeListener);
